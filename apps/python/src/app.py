@@ -1,7 +1,7 @@
 #! /usr/bin/env python3.7
 
 """
-This is an example of a basic flask app that performs the Authorization Code oAuth2 flow
+This is an example of a basic flask app that performs the Authorization Code OAuth2 flow
 to authenticate against Attentive
 """
 import os

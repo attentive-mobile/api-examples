@@ -1,7 +1,7 @@
 # Attentive Application Demo — Python Server
 
 This demo uses a simple [Flask](https://flask.palletsprojects.com/en/2.0.x/) application as the server to demonstrate the
-Attentive oAuth install flow.
+Attentive OAuth install flow.
 
 
 ### You’ll need the following:
