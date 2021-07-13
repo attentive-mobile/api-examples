@@ -20,8 +20,9 @@ CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 
-ATTENTIVE_URL = 'https://api-devel.attentivemobile.com/v1/'
-ACCESS_TOKEN_ENDPOINT = 'https://ui-api-devel.attentivemobile.com/authorization-codes/tokens'
+# TODO: move to prod when we eventually make this public
+ATTENTIVE_API_URL = 'https://api-devel.attentivemobile.com/v1/'
+ACCESS_TOKEN_ENDPOINT = f'https://ui-api-devel.attentivemobile/authorization-codes/tokens'
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////code/data/demo.sqlite"
@@ -59,7 +60,9 @@ def redirect_to_install_page():
     db.session.add(application)
     db.session.commit()
 
-    redirect_url = f'http://localhost:4000/integrations/oauth-install?client_id={CLIENT_ID}' \
+    # TODO: move to prod and delete internal note when we eventually make this public
+    # Note: to internal devs, feel free to use localhost:4000 when testing in dev
+    redirect_url = f'https://ui-devel.attentivemobile.com/integrations/oauth-install?client_id={CLIENT_ID}' \
                    f'&redirect_uri={REDIRECT_URI}' \
                    f'&scope={"+".join(scopes)}' \
                    f'&state={state}'
@@ -90,7 +93,7 @@ def redirect_from_install_page():
         return 'no token'
 
     # make a request to /me endpoint to access Attentive API
-    me_response = requests.get(ATTENTIVE_URL + 'me',
+    me_response = requests.get(ATTENTIVE_API_URL + 'me',
                                headers={'Content-Type': 'application/json',
                                         'Authorization': f'Bearer {access_token}'})
     company_name = me_response.json().get('companyName')
