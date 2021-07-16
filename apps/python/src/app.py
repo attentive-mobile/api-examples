@@ -23,7 +23,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 # TODO: move to prod when we eventually make this public
 ATTENTIVE_API_URL = "https://api-devel.attentivemobile.com/v1/"
 ACCESS_TOKEN_ENDPOINT = (
-    f"https://ui-api-devel.attentivemobile/authorization-codes/tokens"
+    f"https://api-devel.attentivemobile.com/v1/authorization-codes/tokens"
 )
 
 app = Flask(__name__)
