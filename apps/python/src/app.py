@@ -3,6 +3,8 @@
 """
 This is an example of a basic flask app that performs the Authorization Code OAuth2 flow
 to authenticate against Attentive
+
+More details can be found at https://docs.attentivemobile.com/pages/authentication/
 """
 import os
 from datetime import datetime
