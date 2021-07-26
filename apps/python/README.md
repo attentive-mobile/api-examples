@@ -14,13 +14,26 @@ Before getting started, check to see that you have the right version of Python i
 ```bash
 python3 --version
 ```
+Create a virtual environment to manage the packages and state our application needs:
 
-
-
-Once you have Docker setup, copy the example environment variables file .env.example from the root of the repo into your own environment file called .env:
 ```bash
-cp .env.example .env
+cd apps/python
+python3 -m venv env
+source env/bin/activate
 ```
+
+Run pip install to fetch the Python packages we use:
+```bash
+pip install -r requirements.txt
+```
+
+Export our Flask app and run!
+```bash
+export FLASK_APP=./src/app.py
+flask run
+```
+
+
 
 Update your .env file with your own Attentive  API keys and any other configuration details you might want to add. 
 The env variables are managed via the python-dotenv package.
