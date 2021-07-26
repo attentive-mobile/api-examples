@@ -6,9 +6,16 @@ Attentive OAuth install flow.
 
 ### You’ll need the following:
 
-- [Docker](https://docs.docker.com/get-docker/)
+- [Python 3.7.8](https://www.python.org/downloads/release/python-378/)
 
 ### Getting Started
+
+Before getting started, check to see that you have the right version of Python installed (3.7.8).
+```bash
+python3 --version
+```
+
+
 
 Once you have Docker setup, copy the example environment variables file .env.example from the root of the repo into your own environment file called .env:
 ```bash
@@ -24,10 +31,3 @@ docker-compose up
 ```
 You should now see it running on `http://localhost:3000`
 
-### Testing Webhooks
-
-TODO
-
-## Tests
-
-TODO
