@@ -23,7 +23,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 # TODO: move to prod when we eventually make this public
 ATTENTIVE_API_URL = "https://api-devel.attentivemobile.com/v1/"
 ACCESS_TOKEN_ENDPOINT = (
-    f"https://ui-api-devel.attentivemobile/authorization-codes/tokens"
+    f"http://localhost:4000/authorization-codes/tokens"
 )
 
 app = Flask(__name__)
@@ -65,7 +65,7 @@ def redirect_to_install_page():
     # TODO: move to prod and delete internal note when we eventually make this public
     # Note: to internal devs, feel free to use localhost:4000 when testing in dev
     redirect_url = (
-        f"https://ui-devel.attentivemobile.com/integrations/oauth-install?client_id={CLIENT_ID}"
+        f"http://localhost:4000/integrations/oauth-install?client_id={CLIENT_ID}"
         f"&redirect_uri={REDIRECT_URI}"
         f'&scope={"+".join(scopes)}'
         f"&state={state}"
