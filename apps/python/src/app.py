@@ -3,6 +3,8 @@
 """
 This is an example of a basic flask app that performs the Authorization Code OAuth2 flow
 to authenticate against Attentive
+
+More details can be found at https://docs.attentivemobile.com/pages/authentication/
 """
 import os
 from datetime import datetime
@@ -20,14 +22,14 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 
-# TODO: move to prod when we eventually make this public
-ATTENTIVE_API_URL = "https://api-devel.attentivemobile.com/v1/"
+ATTENTIVE_API_URL = "https://api.attentivemobile.com/v1/"
 ACCESS_TOKEN_ENDPOINT = (
-    f"https://api-devel.attentivemobile.com/v1/authorization-codes/tokens"
+    "https://api.attentivemobile.com/v1/authorization-codes/tokens"
 )
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////code/data/demo.sqlite"
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -62,10 +64,9 @@ def redirect_to_install_page():
     db.session.add(application)
     db.session.commit()
 
-    # TODO: move to prod and delete internal note when we eventually make this public
-    # Note: to internal devs, feel free to use localhost:4000 when testing in dev
+    # this is the Attentive url for authorizing your application
     redirect_url = (
-        f"https://ui-devel.attentivemobile.com/integrations/oauth-install?client_id={CLIENT_ID}"
+        f"https://ui.attentivemobile.com/integrations/oauth-install?client_id={CLIENT_ID}"
         f"&redirect_uri={REDIRECT_URI}"
         f'&scope={"+".join(scopes)}'
         f"&state={state}"
