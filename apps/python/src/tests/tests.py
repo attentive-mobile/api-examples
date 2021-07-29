@@ -1,15 +1,6 @@
 """
-
-
-This is a test suite for our webhooks and /pay endpoints.
-It uses the data mocked in test_data.py to create sample requests and responses.
+This is a test suite for Attentive's OAuth flow
 """
-
-import json
-# import os
-from unittest import TestCase
-from dotenv import load_dotenv, find_dotenv
-
 import sys
 
 sys.path.append('../')
@@ -17,6 +8,7 @@ import pytest
 from urllib.parse import parse_qs
 
 from app import app as flask_app, db, Applications
+
 
 @pytest.fixture
 def client():
@@ -27,12 +19,12 @@ def client():
     db.session.remove()
     db.drop_all()
 
+
 @pytest.fixture
 def application():
     application = Applications(state='test_state')
     db.session.add(application)
     db.session.commit()
-
 
 
 def test_redirect_to_install_page(client):
