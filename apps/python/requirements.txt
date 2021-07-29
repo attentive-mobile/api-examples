@@ -2,3 +2,5 @@ flask==2.0.1
 requests==2.25.1
 python-dotenv==0.15.0
 Flask-SQLAlchemy===2.5.1
+pytest-flask==1.2.1
+requests-mock==1.9.3
