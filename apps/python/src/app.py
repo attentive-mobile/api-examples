@@ -89,15 +89,15 @@ def redirect_from_install_page():
     response = requests.post(
         ACCESS_TOKEN_ENDPOINT,
         json={
-            "grantType": "authorization_code",
+            "grant_type": "authorization_code",
             "code": authorization_code,
-            "redirectUri": REDIRECT_URI,
-            "clientId": CLIENT_ID,
-            "clientSecret": CLIENT_SECRET,
+            "redirect_uri": REDIRECT_URI,
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
         },
     )
 
-    access_token = response.json().get("token")
+    access_token = response.json().get("access_token")
     if not access_token:
         return "no token"
 
