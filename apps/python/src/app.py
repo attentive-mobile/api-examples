@@ -124,20 +124,23 @@ def redirect_from_install_page():
 
 
 """
-These are examples of Webhooks Response
+This is an example of a webhook receive endpoint.  
+
+In order to run locally, we recommend using a tunneling tool such as ngrok (https://ngrok.com/) 
 """
 
 
 @app.route("/webhooks", methods=['POST'])
-def subscribe_events():
+def webhook_received():
     webhook_secret = os.getenv('WEBHOOK_SECRET')
-    request_data: dict = json.loads(request.data)
+    request_data = json.loads(request.data)
 
     if webhook_secret:
         # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
         signature = request.headers.get('x-attentive-hmac-sha256')
 
-        # verify signature here:
+        # Retrieve the event by verifying the signature using the raw body
+        # and secret if webhook signing is configured.
         try:
             digest = hmac.new(bytes(webhook_secret, 'utf-8'),
                               msg=request.data,
