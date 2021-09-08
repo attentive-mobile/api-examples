@@ -152,9 +152,6 @@ def webhook_received():
         except Exception as e:
             return e
 
-        event_type = request_data["type"]
-    else:
-        event_type = request_data["type"]
-
+    event_type = request_data["type"]
     print(f'🔔 Webhook of type {event_type} received!')
     return jsonify({'status': 'success'}), 200
