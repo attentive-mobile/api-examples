@@ -10,9 +10,13 @@ import os
 from datetime import datetime
 import random
 import string
+import json
+import hmac
+import hashlib
+import base64
 
 import requests
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, jsonify
 from dotenv import load_dotenv, find_dotenv
 
 from flask_sqlalchemy import SQLAlchemy
@@ -116,4 +120,38 @@ def redirect_from_install_page():
     application.name = company_name
     db.session.add(application)
     db.session.commit()
-    return "Company Successfully Installed"
+    return jsonify({"response": "Company Successfully Installed"})
+
+
+"""
+This is an example of a webhook receive endpoint.  
+
+In order to run locally, we recommend using a tunneling tool such as ngrok (https://ngrok.com/) 
+"""
+
+
+@app.route("/webhooks", methods=['POST'])
+def webhook_received():
+    webhook_secret = os.getenv('WEBHOOK_SECRET')
+    request_data = json.loads(request.data)
+
+    if webhook_secret:
+        # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
+        signature = request.headers.get('x-attentive-hmac-sha256')
+
+        # Retrieve the event by verifying the signature using the raw body
+        # and secret if webhook signing is configured.
+        try:
+            digest = hmac.new(bytes(webhook_secret, 'utf-8'),
+                              msg=request.data,
+                              digestmod=hashlib.sha256).hexdigest()
+            valid = hmac.compare_digest(digest, signature)
+            if not valid:
+                print(f'🔔 Webhook received with invalid signature!')
+                return jsonify({'status': 'invalid signature'}), 403
+        except Exception as e:
+            return e
+
+    event_type = request_data["type"]
+    print(f'🔔 Webhook of type {event_type} received!')
+    return jsonify({'status': 'success'}), 200
