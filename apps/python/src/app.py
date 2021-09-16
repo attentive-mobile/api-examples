@@ -147,7 +147,8 @@ def webhook_received():
                               digestmod=hashlib.sha256).hexdigest()
             valid = hmac.compare_digest(digest, signature)
             if not valid:
-                print(f'🔔 Webhook received with invalid signature!')
+                print(f'‼️ Webhook received with invalid signature! digest: {digest}, sig: {signature}, '
+                      f'request body: {request.data}')
                 return jsonify({'status': 'invalid signature'}), 403
         except Exception as e:
             return e
