@@ -56,6 +56,11 @@ db.init_app(app)
 db.create_all()
 
 
+@app.route("/")
+def index():
+    return jsonify({"message": "Your Application is running successfully!"})
+
+
 @app.route("/install")
 def redirect_to_install_page():
     # Generates a random string containing numbers and letters
