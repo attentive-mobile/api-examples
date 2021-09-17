@@ -56,6 +56,11 @@ db.init_app(app)
 db.create_all()
 
 
+@app.route("/")
+def index():
+    return jsonify({"message": "Your Application is running successfully!"})
+
+
 @app.route("/install")
 def redirect_to_install_page():
     # Generates a random string containing numbers and letters
@@ -147,7 +152,8 @@ def webhook_received():
                               digestmod=hashlib.sha256).hexdigest()
             valid = hmac.compare_digest(digest, signature)
             if not valid:
-                print(f'🔔 Webhook received with invalid signature!')
+                print(f'‼️ Webhook received with invalid signature! digest: {digest}, sig: {signature}, '
+                      f'request body: {request.data}')
                 return jsonify({'status': 'invalid signature'}), 403
         except Exception as e:
             return e

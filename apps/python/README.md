@@ -47,7 +47,7 @@ Complete the following setps to run the demo application:
 1. Export our Flask app and run:
     ```bash
     export FLASK_APP=./src/app.py
-    python3 -m flask run
+    python3 -m flask run --host=127.0.0.1 -p 3000
     ```
 
 You should now see the demo application running on `http://localhost:3000`
