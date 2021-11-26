@@ -1,0 +1,7 @@
+# node app
+.npm
+node_modules/
+pack
+
+# node app
+.env

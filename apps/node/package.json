@@ -1,0 +1,27 @@
+{
+  "name": "api-example",
+  "version": "1.0.0",
+  "description": "A demo application to demonstrate Attentive's oAuth, API and webhooks",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/attentive-mobile/api-examples.git"
+  },
+  "keywords": [
+    "attentive",
+    "sms"
+  ],
+  "author": "Public API",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/attentive-mobile/api-examples/issues"
+  },
+  "homepage": "https://github.com/attentive-mobile/api-examples#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
