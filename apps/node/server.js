@@ -37,7 +37,7 @@ app.get("/install", async (req, res) => {
     `&scope=${scopes.join("+")}` +
     `&state=${state}`;
 
-  res.redirect(redirect_url);
+  res.status(302).redirect(redirect_url);
 });
 
 app.get("/callback", async (req, res) => {
@@ -92,7 +92,7 @@ app.get("/callback", async (req, res) => {
   setState(state, application);
 
   // build redirect url and return 302
-  res.send({ message: "Your Application is installed successfully!" });
+  res.status(200).send({ message: "Your Application is installed successfully!" });
 });
 
 app.post("/webhooks", async (req, res) => {
