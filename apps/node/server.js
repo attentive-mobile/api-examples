@@ -3,6 +3,7 @@ const axios = require("axios");
 const dotenv = require("dotenv").config();
 const crypto = require("crypto");
 const qs = require("qs");
+const { getState, setState } = require("./dal");
 
 const ATTENTIVE_API_URL = "https://api.attentivemobile.com/v1";
 const ACCESS_TOKEN_ENDPOINT =
@@ -29,7 +30,7 @@ app.get("/install", async (req, res) => {
   // List of scopes that your app needs
   const scopes = ["ecommerce:write", "events:write", "subscriptions:write"];
 
-  data[state] = {};
+  setState(state, {});
   const redirect_url =
     `https://ui.attentivemobile.com/integrations/oauth-install?client_id=${CLIENT_ID}` +
     `&redirect_uri=${REDIRECT_URI}` +
@@ -43,9 +44,9 @@ app.get("/callback", async (req, res) => {
   const authorization_code = req.query.code;
   const state = req.query.state;
 
-  let application = data[state];
-  if (application === null) {
-    return res.send({
+  let application = getState(state);
+  if (!application) {
+    return res.status(400).send({
       message: `Your Application did not successfully install due to no application in memory`,
     });
   }
@@ -65,7 +66,7 @@ app.get("/callback", async (req, res) => {
       },
     })
     .catch((response) => {
-      return res.send({
+      return res.status(400).send({
         message: `Your Application did not successfully install due to ${response.status_code} from ${ACCESS_TOKEN_ENDPOINT}`,
       });
     });
@@ -79,7 +80,7 @@ app.get("/callback", async (req, res) => {
       },
     })
     .catch((response) => {
-      return res.send({
+      return res.status(400).send({
         message: `Your Application did not successfully install due to ${response.status_code} from ${ATTENTIVE_API_URL}/me`,
       });
     });
@@ -88,7 +89,7 @@ app.get("/callback", async (req, res) => {
   // store access token and information about the installing company if necessary
   application["token"] = access_token;
   application["name"] = company_name;
-  data[state] = application;
+  setState(state, application);
 
   // build redirect url and return 302
   res.send({ message: "Your Application is installed successfully!" });
