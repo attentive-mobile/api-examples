@@ -87,7 +87,6 @@ app.get("/callback", async (req, res) => {
     const access_token = response.data.access_token;
     const me_response = await axios.get(`${ATTENTIVE_API_URL}/me`, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${access_token}`,
       },
     });
