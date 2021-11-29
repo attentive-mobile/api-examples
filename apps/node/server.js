@@ -3,6 +3,7 @@ const axios = require("axios");
 const dotenv = require("dotenv").config();
 const crypto = require("crypto");
 const qs = require("qs");
+
 const ATTENTIVE_API_URL = "https://api.attentivemobile.com/v1";
 const ACCESS_TOKEN_ENDPOINT =
   "https://api.attentivemobile.com/v1/authorization-codes/tokens";
