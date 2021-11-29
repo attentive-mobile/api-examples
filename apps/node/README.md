@@ -8,7 +8,7 @@ flow.
 
 ### Prerequistes:
 
-- [Node v12.0.0](https://nodejs.org/en/download/)
+- [Node v12.0.0](https://nodejs.org/download/release/v12.0.0/)
  
 ### Getting Started
 
@@ -34,7 +34,7 @@ Complete the following setps to run the demo application:
     npm start
     ```
 
-1. (bonus) For hot reloading for development purposes, install Nodemon
+1. (bonus) For hotloading file changes, install Nodemon
     ```bash
     npm install -G nodemon
     nodemon
