@@ -6,9 +6,9 @@ const qs = require("qs");
 
 const { getState, setState } = require("./dal");
 
-const ATTENTIVE_API_URL = "https://api-devel.attentivemobile.com/v1";
+const ATTENTIVE_API_URL = "https://api.attentivemobile.com/v1";
 const ACCESS_TOKEN_ENDPOINT =
-  "https://api-devel.attentivemobile.com/v1/authorization-codes/tokens";
+  "https://api.attentivemobile.com/v1/authorization-codes/tokens";
 
 const CLIENT_ID = dotenv.parsed.CLIENT_ID; // Your client id
 const CLIENT_SECRET = dotenv.parsed.CLIENT_SECRET; // Your secret
@@ -37,7 +37,7 @@ app.get("/install", async (req, res) => {
 
     setState(state, {});
     const redirect_url =
-      `https://ui-devel.attentivemobile.com/integrations/oauth-install?client_id=${CLIENT_ID}` +
+      `https://ui.attentivemobile.com/integrations/oauth-install?client_id=${CLIENT_ID}` +
       `&redirect_uri=${REDIRECT_URI}` +
       `&scope=${scopes.join("+")}` +
       `&state=${state}`;
