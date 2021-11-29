@@ -1,19 +1,21 @@
 const express = require('express');
 const axios = require('axios');
-const dotenv = require('dotenv').config()
+const dotenv = require('dotenv').config();
 const crypto = require('crypto');
+const qs = require('qs');
+const ATTENTIVE_API_URL = "https://api-devel.attentivemobile.com/v1";
+const ACCESS_TOKEN_ENDPOINT = "https://api-devel.attentivemobile.com/v1/authorization-codes/tokens";
+
+const CLIENT_ID = dotenv.parsed.CLIENT_ID; // Your client id
+const CLIENT_SECRET = dotenv.parsed.CLIENT_SECRET; // Your secret
+const REDIRECT_URI = dotenv.parsed.REDIRECT_URI; // Your redirect uri
+
+let data = {};
+
+const PORT = 3002
 
 let app = express()
 app.use(express.json())
-
-const port = 3002
-
-const ATTENTIVE_API_URL = "https://api-devel.attentivemobile.com/v1/";
-const ACCESS_TOKEN_ENDPOINT = "https://api-devel.attentivemobile.com/v1/authorization-codes/tokens"
-
-var CLIENT_ID = dotenv.parsed.CLIENT_ID; // Your client id
-var CLIENT_SECRET = dotenv.parsed.CLIENT_SECRET; // Your secret
-var REDIRECT_URI = dotenv.parsed.REDIRECT_URI; // Your redirect uri
 
 app.get('/', (req, res) => {
   res.send({"message": "Your Application is running successfully!"});
@@ -26,6 +28,7 @@ app.get('/install', async (req, res) => {
   // List of scopes that your app needs
   const scopes = ["ecommerce:write", "events:write", "subscriptions:write"]
 
+  data[state] = {};
   const redirect_url =
     `https://ui-devel.attentivemobile.com/integrations/oauth-install?client_id=${CLIENT_ID}` + 
     `&redirect_uri=${REDIRECT_URI}` +
@@ -36,31 +39,46 @@ app.get('/install', async (req, res) => {
 });
   
 app.get('/callback', async (req, res) => {
-  const authorization_code = req.query.authorizationCode;
+  const authorization_code = req.query.code;
   const state = req.query.state;
 
-// TODO: add application to in memory db
+  let application = data[state];
+  if (application === null) {
+    return res.send({"message": `Your Application did not successfully install due to no application in memory`})
+  }
 
-  const payload = JSON.stringify({
+  const payload = {
     "grant_type": "authorization_code",
     "code": authorization_code,
     "redirect_uri": REDIRECT_URI,
     "client_id": CLIENT_ID,
-    "client_secret": CLIENT_SECRET,
-  });
+    "client_secret": CLIENT_SECRET
+  };
   // your application makes a request to exchange an authorization code for an access_token
-  const response = await axios.post(ACCESS_TOKEN_ENDPOINT, {
-    data: JSON.stringify(payload), 
-    headers: {'Content-Type': 'application/json; charset=utf-8'}
+  const response = await axios.post(ACCESS_TOKEN_ENDPOINT, qs.stringify(payload), {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  }).catch((response) => {
+    return res.send({"message": `Your Application did not successfully install due to ${response.status_code} from ${ACCESS_TOKEN_ENDPOINT}`})
   });
+
   const access_token = response.data.access_token;
   const me_response = await axios.get(`${ATTENTIVE_API_URL}/me`, {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${access_token}`,
     }
+  }).catch(
+    (response) => {
+      return res.send({"message": `Your Application did not successfully install due to ${response.status_code} from ${ATTENTIVE_API_URL}/me`})
   });
-  company_name = me_response.data.companyName;
+  const company_name = me_response.data.companyName;
+
+  // store access token and information about the installing company if necessary
+  application['token'] = access_token;
+  application['name'] = company_name;
+  data[state] = application;
 
   // build redirect url and return 302
   res.send({"message": "Your Application is installed successfully!"});
@@ -91,10 +109,9 @@ app.post('/webhooks', async (req, res) => {
   res.status(200).json({"status": "success"});
 });
 
-app.listen(port, () => {
-  console.log(`Demo app is listening at http://localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`Demo app is listening at http://localhost:${PORT}`)
 })
-
 
 const generateRandomString = (length) => {
   let text = '';
