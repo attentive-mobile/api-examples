@@ -1,7 +1,8 @@
-data = {};
+// in a production system, we recommend using a datastore
+const data = {};
 
-const getState = () => {
-  return data;
+const getState = (key) => {
+  return data[key];
 };
 
 const setState = (key, value) => {
