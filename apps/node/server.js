@@ -11,10 +11,9 @@ const ACCESS_TOKEN_ENDPOINT =
 const CLIENT_ID = dotenv.parsed.CLIENT_ID; // Your client id
 const CLIENT_SECRET = dotenv.parsed.CLIENT_SECRET; // Your secret
 const REDIRECT_URI = dotenv.parsed.REDIRECT_URI; // Your redirect uri
+const PORT = 3002;
 
 let data = {};
-
-const PORT = 3002;
 
 let app = express();
 app.use(express.json());
