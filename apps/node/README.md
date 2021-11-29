@@ -8,7 +8,7 @@ flow.
 
 ### Prerequistes:
 
-- [Node v12.0.0](https://nodejs.org/download/release/v12.0.0/)
+- [Node v16.13.0](https://nodejs.org/download/release/v16.13.0/)
  
 ### Getting Started
 
