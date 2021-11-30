@@ -20,7 +20,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   try {
-    res.send({ message: "Your Application is running successfully!" });
+    res.json({ message: "Your Application is running successfully!" });
   } catch (ex) {
     console.error("unexpected error", ex);
     res.status(500).json({ message: "Unexpected error" });
@@ -79,7 +79,7 @@ app.get("/callback", async (req, res) => {
       }
     );
     if (!response) {
-      return res.status(400).send({
+      return res.status(400).json({
         message: `Your Application did not successfully install due to ${response.status_code} from ${ACCESS_TOKEN_ENDPOINT}/me`,
       });
     }
@@ -91,7 +91,7 @@ app.get("/callback", async (req, res) => {
       },
     });
     if (!me_response) {
-      return res.status(400).send({
+      return res.status(400).json({
         message: `Your Application did not successfully install due to ${me_response.status_code} from ${ATTENTIVE_API_URL}/me`,
       });
     }
@@ -106,12 +106,18 @@ app.get("/callback", async (req, res) => {
     // build redirect url and return 302
     res
       .status(200)
-      .send({ message: "Your Application is installed successfully!" });
+      .json({ message: "Your Application is installed successfully!" });
   } catch (ex) {
     console.error("unexpected error", ex);
     res.status(500).json({ message: "Unexpected error" });
   }
 });
+
+/*
+This is an example of a webhook receive endpoint.  
+
+In order to run locally, we recommend using a tunneling tool such as ngrok (https://ngrok.com/) 
+*/
 
 app.post("/webhooks", async (req, res) => {
   try {
