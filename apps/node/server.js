@@ -6,9 +6,9 @@ const qs = require("qs");
 
 const { getState, setState } = require("./dal");
 
-const ATTENTIVE_API_URL = "https://api.attentivemobile.com/v1";
+const ATTENTIVE_API_URL = "https://api-devel.attentivemobile.com/v1";
 const ACCESS_TOKEN_ENDPOINT =
-  "https://api.attentivemobile.com/v1/authorization-codes/tokens";
+  "https://api-devel.attentivemobile.com/v1/authorization-codes/tokens";
 
 const CLIENT_ID = dotenv.parsed.CLIENT_ID; // Your client id
 const CLIENT_SECRET = dotenv.parsed.CLIENT_SECRET; // Your secret
@@ -36,12 +36,12 @@ app.get("/install", async (req, res) => {
     const scopes = ["ecommerce:write", "events:write", "subscriptions:write"];
 
     setState(state, {});
-    const redirect_url =
-      `https://ui.attentivemobile.com/integrations/oauth-install?client_id=${CLIENT_ID}` +
-      `&redirect_uri=${REDIRECT_URI}` +
-      `&scope=${scopes.join("+")}` +
-      `&state=${state}`;
 
+    // build redirect url and return 302
+    const redirect_url =
+      `https://ui-devel.attentivemobile.com/integrations/oauth-install?client_id=${CLIENT_ID}` +
+      `&redirect_uri=${REDIRECT_URI}` +
+      `&state=${state}`;
     res.status(302).redirect(redirect_url);
   } catch (ex) {
     console.error("unexpected error", ex);
@@ -103,7 +103,6 @@ app.get("/callback", async (req, res) => {
     application["name"] = company_name;
     setState(state, application);
 
-    // build redirect url and return 302
     res
       .status(200)
       .json({ message: "Your Application is installed successfully!" });
@@ -124,7 +123,11 @@ app.post("/webhooks", async (req, res) => {
     const webhook_secret = dotenv.parsed.WEBHOOK_SECRET;
     const payload = JSON.stringify(req.body);
     if (webhook_secret) {
+      // Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
       const signature = req.headers["x-attentive-hmac-sha256"];
+
+      // Retrieve the event by verifying the signature using the raw body
+      // and secret if webhook signing is configured.
 
       const hmac = crypto.createHmac("sha256", webhook_secret);
       const digest = Buffer.from(hmac.update(payload).digest("hex"), "utf8");
