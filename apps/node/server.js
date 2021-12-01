@@ -51,8 +51,7 @@ app.get("/install", async (req, res) => {
 
 app.get("/callback", async (req, res) => {
   try {
-    const authorization_code = req.query.code;
-    const state = req.query.state;
+    const { code, state } = req.query;
 
     let application = getState(state);
     if (!application) {
@@ -63,7 +62,7 @@ app.get("/callback", async (req, res) => {
 
     const payload = {
       grant_type: "authorization_code",
-      code: authorization_code,
+      code,
       redirect_uri: REDIRECT_URI,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
@@ -78,11 +77,6 @@ app.get("/callback", async (req, res) => {
         },
       }
     );
-    if (!response) {
-      return res.status(400).json({
-        message: `Your Application did not successfully install due to ${response.status_code} from ${ACCESS_TOKEN_ENDPOINT}/me`,
-      });
-    }
 
     const access_token = response.data.access_token;
     const me_response = await axios.get(`${ATTENTIVE_API_URL}/me`, {
@@ -90,17 +84,12 @@ app.get("/callback", async (req, res) => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    if (!me_response) {
-      return res.status(400).json({
-        message: `Your Application did not successfully install due to ${me_response.status_code} from ${ATTENTIVE_API_URL}/me`,
-      });
-    }
 
     const company_name = me_response.data.companyName;
 
     // store access token and information about the installing company if necessary
-    application["token"] = access_token;
-    application["name"] = company_name;
+    application.token = access_token;
+    application.name = company_name;
     setState(state, application);
 
     res
