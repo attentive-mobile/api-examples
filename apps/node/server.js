@@ -53,7 +53,7 @@ app.get("/callback", async (req, res) => {
   try {
     const { code, state } = req.query;
 
-    let application = getState(state);
+    const application = getState(state);
     if (!application) {
       return res.status(400).send({
         message: `Your Application did not successfully install due to no application in memory`,
