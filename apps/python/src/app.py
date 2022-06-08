@@ -95,16 +95,16 @@ def redirect_from_install_page():
         return "no application"
 
     # your application makes a request to exchange an authorization code for an access_token
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     response = requests.post(
         ACCESS_TOKEN_ENDPOINT,
-        json={
+        data={
             "grant_type": "authorization_code",
             "code": authorization_code,
             "redirect_uri": REDIRECT_URI,
             "client_id": CLIENT_ID,
             "client_secret": CLIENT_SECRET,
-        },
-    )
+        }, headers=headers)
 
     access_token = response.json().get("access_token")
     if not access_token:
